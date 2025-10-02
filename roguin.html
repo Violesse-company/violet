@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>絶対に有名になれるSNS - ユーザーネーム入力</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f4f8;
+    }
+    .container {
+      text-align: center;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #007BFF;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>絶対に有名になれるSNS</h1>
+    <p>ユーザーネームを入力してください</p>
+    <input type="text" id="username" placeholder="例: ゆうた">
+    <br>
+    <button onclick="goToIndex()">投稿画面へ</button>
+  </div>
+
+  <script>
+    function goToIndex() {
+      const username = document.getElementById('username').value.trim();
+      if(username === "") {
+        alert("ユーザーネームを入力してください！");
+        return;
+      }
+      // URLパラメータで次のページにユーザーネームを渡す
+      window.location.href = `index.html?username=${encodeURIComponent(username)}`;
+    }
+  </script>
+</body>
+</html>
