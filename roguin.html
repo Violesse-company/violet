@@ -2,65 +2,92 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>絶対に有名になれるSNS - ユーザーネーム入力</title>
+  <title>ログイン</title>
   <style>
     body {
+      background: #15202b;
+      color: #fff;
       font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #f0f4f8;
+      margin: 0;
     }
-    .container {
+    .login-box {
+      background: #192734;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
       text-align: center;
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     input[type="text"] {
-      width: 80%;
-      padding: 10px;
-      font-size: 16px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      width: 90%;
+      padding: 8px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
     }
     button {
-      padding: 10px 20px;
-      font-size: 16px;
+      background: #1d9bf0;
+      color: white;
       border: none;
-      border-radius: 8px;
-      background-color: #007BFF;
-      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
       cursor: pointer;
+      margin-top: 10px;
     }
-    button:hover {
-      background-color: #0056b3;
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    label {
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>絶対に有名になれるSNS</h1>
-    <p>ユーザーネームを入力してください</p>
-    <input type="text" id="username" placeholder="例: バイオレット">
-    <br>
-    <button onclick="goToIndex()">投稿画面へ</button>
+  <div class="login-box">
+    <h2>ログイン</h2>
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="バイオレット" required><br>
+      <label>
+  <input type="checkbox" id="agree">
+  <span id="terms-link" style="color:blue; cursor:pointer; text-decoration:underline;">
+    利用規約
+  </span>
+  に同意しますか？
+      </label><br>
+      <button type="submit" id="loginBtn" disabled>ログイン</button>
+    </form>
+    <h4>⚠️ユーザーネームは保存されません⚠️</h4>
   </div>
 
   <script>
-    function goToIndex() {
-      const username = document.getElementById('username').value.trim();
-      if(username === "") {
-        alert("ユーザーネームを入力してください！");
-        return;
-      }
-      // URLパラメータで次のページにユーザーネームを渡す
-      window.location.href = `index.html?username=${encodeURIComponent(username)}`;
-    }
+    const agree = document.getElementById("agree");
+    const loginBtn = document.getElementById("loginBtn");
+
+    agree.addEventListener("change", () => {
+      loginBtn.disabled = !agree.checked;
+    });
+
+        const termsLink = document.getElementById("terms-link");
+  termsLink.addEventListener("click", () => {
+    window.location.href = "kiaku.html";
+  });
+
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault(); // ページリロードを止める
+
+  const username = document.getElementById("username").value;
+  if (username) {
+    sessionStorage.setItem("username", username); // ← localStorage → sessionStorage
+    window.location.href = "index.html"; // ログイン成功 → 移動
+  } else {
+    alert("ユーザーネームを入力してください");
+  }
+});
+
   </script>
 </body>
 </html>
