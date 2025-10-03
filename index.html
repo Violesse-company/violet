@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-ぬ<meta charset="UTF-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>絶対に有名になれるSNS - 投稿</title>
 <style>
@@ -107,13 +107,13 @@ button:hover { background-color:#0d95e8; }
 </div>
 
 <script>
-// ユーザーネーム取得
-const urlParams = new URLSearchParams(window.location.search);
-const username = urlParams.get('username');
-if(!username){
-  alert("ユーザーネームが必要です。トップに戻ります。");
+// ユーザーネーム確認
+const username = sessionStorage.getItem("username"); // ← localStorageから変更
+if (!username) {
+  // 未入力ならログインに戻す
   window.location.href = "roguin.html";
 }
+
 
 // コメントデータ（例：ゲームだけ。必要なら全タイプ追加可能）
 const commentsData = {
@@ -757,35 +757,64 @@ function addComment() {
   if (totalComments < 5) {
     // 最初の5コメント：ポジティブ
     commentText = positiveComments[Math.floor(Math.random() * positiveComments.length)];
-    className = "comment positive";
+    className = "comment positive"; // ポジティブ → 青
   } else if (totalComments < 10) {
     // 次の5コメント：ネガティブ
     commentText = negativeComments[Math.floor(Math.random() * negativeComments.length)];
-    className = "comment negative";
+    className = "comment negative"; // ネガティブ → 赤
   } else if (totalComments < 30) {
     // 次の20コメント：ランダム
-    const isPositive = Math.random() < 0.5;
-    commentText = isPositive
-      ? positiveComments[Math.floor(Math.random() * positiveComments.length)]
-      : negativeComments[Math.floor(Math.random() * negativeComments.length)];
-    className = "comment " + (Math.random() < 0.5 ? "positive" : "negative");
-  } else {
-    // 30コメント超えた場合
-    commentText = "🔥炎上しました🔥";
-    className = "comment negative";
+const isPositive = Math.random() < 0.5;
+if (isPositive) {
+  commentText = positiveComments[Math.floor(Math.random() * positiveComments.length)];
+  className = "comment positive";
+} else {
+  commentText = negativeComments[Math.floor(Math.random() * negativeComments.length)];
+  className = "comment negative";
+}
 
-    // ネガティブコメントを2秒間に5コメント（400msごと）で流す
-    let flameCount = 0;
-    const flameInterval = setInterval(() => {
-      const flameDiv = document.createElement("div");
-      flameDiv.className = "comment negative";
-      flameDiv.textContent = negativeComments[Math.floor(Math.random() * negativeComments.length)];
-      commentsArea.appendChild(flameDiv);
-      flameDiv.scrollIntoView({ behavior: "smooth" });
-      flameCount++;
-      if (flameCount >= 10) clearInterval(flameInterval); // 10コメントで止める
-    }, 400);
-  }
+  } else {
+let overlayShown = false; // すでに炎上画面を表示したかどうか
+
+function showFlameOverlay() {
+  if (overlayShown) return; // 既に表示済みなら何もしない
+  overlayShown = true;
+
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.background = "rgba(0,0,0,0.9)";
+  overlay.style.color = "red";
+  overlay.style.fontSize = "3em";
+  overlay.style.display = "flex";
+  overlay.style.justifyContent = "center";
+  overlay.style.alignItems = "center";
+  overlay.innerText = "🔥 炎上しました 🔥";
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    overlay.style.display = "none";
+  }, 5000);
+}
+
+
+
+  // ネガティブコメントを2秒間に5コメントの速度で流す
+  let flameCount = 0;
+  const flameInterval = setInterval(() => {
+    const flameDiv = document.createElement("div");
+    flameDiv.className = "comment negative";
+    flameDiv.textContent = negativeComments[Math.floor(Math.random() * negativeComments.length)];
+    commentsArea.appendChild(flameDiv);
+    flameDiv.scrollIntoView({ behavior: "smooth" });
+    flameCount++;
+    if (flameCount >= 10) clearInterval(flameInterval);
+  }, 200);
+}
+
 
   div.className = className;
   div.textContent = commentText;
